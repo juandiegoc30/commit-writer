@@ -11,7 +11,7 @@
     <img alt="SQLite" src="https://img.shields.io/badge/SQLite-local_history-003B57?logo=sqlite&logoColor=white">
 </p>
 
-Need Spanish? See [README.es.md](README.es.md).
+🌐 También disponible en: [Español](README.es.md).
 
 ## Overview
 
