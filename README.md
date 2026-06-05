@@ -288,3 +288,7 @@ Streamlit UI
 - Export history.
 - Project profiles.
 - Custom styles.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

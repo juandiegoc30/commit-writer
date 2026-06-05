@@ -286,3 +286,7 @@ Streamlit UI
 - Exportar historial.
 - Perfiles por proyecto.
 - Estilos personalizados.
+
+## Licencia
+
+Este proyecto está bajo la [Licencia MIT](LICENSE).
