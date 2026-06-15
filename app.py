@@ -14,6 +14,22 @@ from utils.validators import validate_generation_input
 
 load_dotenv()
 
+
+def get_config(key: str, default: str | None = None) -> str | None:
+    """Read a config value from Streamlit secrets first, then the environment.
+
+    On Streamlit Cloud values live in st.secrets; locally they come from .env
+    via python-dotenv. Accessing st.secrets raises when no secrets file exists,
+    so the lookup is guarded.
+    """
+    try:
+        if key in st.secrets:
+            return str(st.secrets[key])
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
+
 COMMIT_STYLE_OPTIONS = [
     "conventional",
     "simple_english",
@@ -65,6 +81,7 @@ UI_TEXT = {
         "save_history": "Save to local history",
         "provider": "Provider",
         "model": "Model",
+        "no_api": "No API connected",
         "hero_kicker": "Uses external LLM API",
         "hero_subtitle": "Turn informal descriptions into clear, consistent commit messages ready to use in your repository.",
         "hero_stat_styles_title": "6 styles",
@@ -130,6 +147,7 @@ UI_TEXT = {
         "save_history": "Guardar en historial local",
         "provider": "Proveedor",
         "model": "Modelo",
+        "no_api": "Sin API conectada",
         "hero_kicker": "Usa una API LLM externa",
         "hero_subtitle": "Convierte descripciones informales en mensajes de commit claros, consistentes y listos para usar en tu repositorio.",
         "hero_stat_styles_title": "6 estilos",
@@ -1807,11 +1825,14 @@ def render_sidebar() -> bool:
         save_to_history = st.checkbox(t("save_history"), value=history_default)
 
         st.divider()
-        provider = os.getenv("LLM_PROVIDER", "deepseek")
-        model = os.getenv("LLM_MODEL", "deepseek-v4-flash")
-        st.markdown(
-            f"""
-            <div class="cw-provider-stack">
+        # Only report a provider/model when an API key is actually configured;
+        # without one ProviderFactory can't connect, so show a generic notice.
+        # Works on Streamlit Cloud (st.secrets) and locally (.env) alike.
+        api_connected = bool((get_config("LLM_API_KEY") or "").strip())
+        if api_connected:
+            provider = get_config("LLM_PROVIDER", "deepseek")
+            model = get_config("LLM_MODEL", "deepseek-v4-flash")
+            badges = f"""
                 <div class="cw-provider-badge">
                     <span>{html.escape(t("provider"))}</span>
                     <strong>{html.escape(provider)}</strong>
@@ -1820,8 +1841,15 @@ def render_sidebar() -> bool:
                     <span>{html.escape(t("model"))}</span>
                     <strong>{html.escape(model)}</strong>
                 </div>
-            </div>
-            """,
+            """
+        else:
+            badges = f"""
+                <div class="cw-provider-badge">
+                    <strong>{html.escape(t("no_api"))}</strong>
+                </div>
+            """
+        st.markdown(
+            f'<div class="cw-provider-stack">{badges}</div>',
             unsafe_allow_html=True,
         )
 
