@@ -484,6 +484,23 @@ CUSTOM_CSS = """
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0f172a 0%, #101827 100%) !important;
         border-right: 1px solid rgba(148, 163, 184, 0.16) !important;
+        width: 21rem !important;
+        min-width: 21rem !important;
+        max-width: 21rem !important;
+        flex: 0 0 21rem !important;
+        resize: none !important;
+    }
+
+    /* Disable sidebar resizing. The drag handle is the last, testid-less child
+       div of the sidebar section; its inner div carries `cursor: col-resize`
+       via an inline style, and a nested bar brightens on :hover (the glowing
+       border). Hiding the wrapper kills the drag area, the resize cursor and
+       the hover glow at once. Both selectors are structural (no Emotion hash),
+       so they survive Streamlit upgrades. */
+    section[data-testid="stSidebar"] > div:not([data-testid]),
+    section[data-testid="stSidebar"] div[style*="cursor: col-resize"] {
+        display: none !important;
+        pointer-events: none !important;
     }
 
     section[data-testid="stSidebar"] [data-testid="stSidebarHeader"] {
