@@ -47,6 +47,7 @@ The app includes optional local history, style selection, scope, formality, mult
 - Warnings when the description is ambiguous.
 - Optional local history stored in SQLite.
 - Architecture prepared for multiple LLM providers.
+- Sidebar indicator showing the connected provider and model, or a clear "No API connected" notice when no API key is set.
 
 ## Stack
 
@@ -175,6 +176,28 @@ streamlit run app.py
 ```
 
 Then open the local URL shown by Streamlit.
+
+## Deployment
+
+Configuration is read from Streamlit secrets first and falls back to environment variables, so the app runs both locally (`.env`) and on Streamlit Community Cloud (secrets) without code changes.
+
+### Streamlit Community Cloud
+
+1. Push the repository to GitHub. The `.env` file is gitignored and is not uploaded.
+2. Create a new app at [share.streamlit.io](https://share.streamlit.io) pointing to `app.py`.
+3. In **App settings → Secrets**, add your configuration in TOML format:
+
+```toml
+LLM_PROVIDER = "deepseek"
+LLM_API_KEY = "sk-your-key"
+LLM_MODEL = "deepseek-v4-flash"
+LLM_BASE_URL = "https://api.deepseek.com"
+HISTORY_ENABLED = "false"
+```
+
+The sidebar reflects the connected provider and model; when no `LLM_API_KEY` is set it shows a generic "No API connected" notice.
+
+> Note: the local SQLite history is not persisted on Streamlit Community Cloud because the filesystem is ephemeral. Set `HISTORY_ENABLED = "false"` to avoid confusion, or use a platform with a persistent disk.
 
 ## Usage Examples
 
