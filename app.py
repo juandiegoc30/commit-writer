@@ -897,9 +897,19 @@ CUSTOM_CSS = """
         background: rgba(255, 75, 75, 0.16) !important;
     }
 
-    section[data-testid="stSidebar"] [class*="stBaseButton-segmented_control"] {
+    section[data-testid="stSidebar"] [class*="stBaseButton-segmented_control"],
+    section[data-testid="stSidebar"] [data-testid^="stBaseButton-segmented_control"] {
         border-color: rgba(255, 75, 75, 0.74) !important;
         color: #ffffff !important;
+        /* Streamlit ships these buttons with a light default fill; without this
+           the unselected options (1 and 5) render as white boxes. */
+        background: transparent !important;
+    }
+
+    /* Selected option keeps the red highlight. */
+    section[data-testid="stSidebar"] [data-testid="stBaseButton-segmented_controlActive"] {
+        background: rgba(255, 75, 75, 0.22) !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 75, 75, 0.74) !important;
     }
 
     section[data-testid="stSidebar"] [class*="stBaseButton-segmented_control"][aria-checked="true"],
