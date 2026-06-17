@@ -1,6 +1,10 @@
 # Commit Writer
 
 <p align="center">
+  <img src="assets/banner.es.png" alt="Commit Writer" width="100%">
+</p>
+
+<p align="center">
   Convierte descripciones de cambios en commits claros, consistentes y listos para copiar.
 </p>
 

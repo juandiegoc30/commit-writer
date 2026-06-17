@@ -1,6 +1,10 @@
 # Commit Writer
 
 <p align="center">
+    <img src="assets/banner.png" alt="Commit Writer" width="100%">
+</p>
+
+<p align="center">
     Turn change descriptions into clean, consistent commit messages that are ready to copy.
 </p>
 
