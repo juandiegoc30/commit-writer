@@ -429,6 +429,14 @@ CUSTOM_CSS = """
         --cw-code: #07101e;
         --cw-radius-lg: 24px;
         --cw-shadow: 0 22px 70px rgba(0, 0, 0, 0.26);
+        --cw-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        /* Spacing scale (4px base) for consistent vertical rhythm. */
+        --space-2xs: 0.25rem;  /* 4px  */
+        --space-xs:  0.5rem;   /* 8px  */
+        --space-sm:  0.75rem;  /* 12px */
+        --space-md:  1rem;     /* 16px */
+        --space-lg:  1.25rem;  /* 20px */
+        --space-xl:  1.5rem;   /* 24px */
         --primary-color: #ff4b4b;
         --primary-color-rgb: 255, 75, 75;
         --primaryColor: #ff4b4b;
@@ -488,8 +496,9 @@ CUSTOM_CSS = """
         margin-bottom: 0 !important;
     }
 
+
     div[data-testid="stVerticalBlock"] {
-        gap: 0.84rem !important;
+        gap: var(--space-sm) !important;
     }
 
     div[data-testid="stVerticalBlockBorderWrapper"],
@@ -560,7 +569,7 @@ CUSTOM_CSS = """
         line-height: 1.08 !important;
         font-weight: 890 !important;
         letter-spacing: 0.01em !important;
-        margin: 0.34rem 0 0 0 !important;
+        margin: var(--space-md) 0 0 0 !important;
     }
 
     .cw-sidebar-subtitle {
@@ -972,7 +981,7 @@ CUSTOM_CSS = """
             radial-gradient(circle at 92% -5%, rgba(255, 75, 75, 0.13), transparent 40%),
             linear-gradient(135deg, #ffffff 0%, #f8fafc 54%, #eef2ff 100%);
         box-shadow: var(--cw-shadow);
-        margin: 0 0 0.92rem 0 !important;
+        margin: 0.9rem 0 0.92rem 0 !important;
         color: var(--cw-title) !important;
         min-height: 196px;
         display: flex;
@@ -1038,11 +1047,11 @@ CUSTOM_CSS = """
     }
 
     .cw-stat-card {
-        padding: 0.88rem 0.86rem;
+        padding: 1.05rem 0.95rem;
         border-radius: 17px;
         border: 1px solid #e2e8f0;
         background: rgba(255, 255, 255, 0.78);
-        min-height: 104px;
+        min-height: 112px;
         box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
         display: flex;
         flex-direction: column;
@@ -1053,8 +1062,8 @@ CUSTOM_CSS = """
         display: block;
         color: #0f172a !important;
         font-size: 0.90rem;
-        line-height: 1.2;
-        margin-bottom: 0.31rem;
+        line-height: 1.25;
+        margin-bottom: 0.38rem;
         letter-spacing: -0.025em;
     }
 
@@ -1062,7 +1071,7 @@ CUSTOM_CSS = """
         display: block;
         color: #64748b !important;
         font-size: 0.76rem;
-        line-height: 1.33;
+        line-height: 1.42;
         font-weight: 590;
     }
 
@@ -1071,6 +1080,7 @@ CUSTOM_CSS = """
         border: 1px solid rgba(148, 163, 184, 0.20);
         border-radius: var(--cw-radius-lg);
         padding: 1.05rem 1.05rem 0.88rem 1.05rem;
+        margin-top: var(--space-md);
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.20);
         backdrop-filter: blur(16px);
     }
@@ -1082,6 +1092,7 @@ CUSTOM_CSS = """
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.20);
         backdrop-filter: blur(16px);
         padding: 1.05rem 1.05rem 0.88rem 1.05rem;
+        margin-top: var(--space-2xs);
     }
 
     div[data-testid="stForm"] label,
@@ -1105,13 +1116,21 @@ CUSTOM_CSS = """
         color: #f8fafc !important;
         font-weight: 750 !important;
         letter-spacing: -0.01em;
-        transition: all 160ms ease;
+        transition: transform 160ms var(--cw-ease-out),
+                    border-color 160ms ease,
+                    box-shadow 160ms ease;
     }
 
     .stButton > button:hover,
     div[data-testid="stFormSubmitButton"] > button:hover {
         border-color: rgba(255, 75, 75, 0.74) !important;
         transform: translateY(-1px);
+    }
+
+    /* Press feedback: the button confirms it heard the click. */
+    .stButton > button:active,
+    div[data-testid="stFormSubmitButton"] > button:active {
+        transform: scale(0.97);
     }
 
     div[data-testid="stFormSubmitButton"] button[kind="primary"],
@@ -1137,7 +1156,9 @@ CUSTOM_CSS = """
 
     .cw-section-title-examples {
         padding: 0 !important;
-        margin-top: -0.02rem !important;
+        /* Align "Example" heading with the top of the left-column form card;
+           both use --space-md so they share a baseline. */
+        margin-top: var(--space-md) !important;
     }
 
     .cw-muted,
@@ -1405,6 +1426,20 @@ CUSTOM_CSS = """
     @media (max-width: 760px) {
         .cw-hero { padding: 1.1rem; border-radius: 22px; }
         .cw-stats { grid-template-columns: 1fr; }
+    }
+
+    /* Respect reduced-motion: drop positional movement, keep color/border cues. */
+    @media (prefers-reduced-motion: reduce) {
+        .stButton > button,
+        div[data-testid="stFormSubmitButton"] > button {
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+        .stButton > button:hover,
+        div[data-testid="stFormSubmitButton"] > button:hover,
+        .stButton > button:active,
+        div[data-testid="stFormSubmitButton"] > button:active {
+            transform: none;
+        }
     }
 
     /* Final color lock: force Streamlit red on accent/hover/active states. */
